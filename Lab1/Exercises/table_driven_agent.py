@@ -30,11 +30,7 @@ def run(): # run agent on several sequential percepts
     print (TABLE_DRIVEN_AGENT ((A, 'Dirty')), '\t', percepts) 
     print(TABLE_DRIVEN_AGENT ((B, 'Clean')), '\t', percepts)
 
-def main():
-    run()
-
-if __name__ == '__main__':
-    main()
+run()
 
 #   3.How many table entries would be required if only the current percept was used to select and
 #   action rather than the percept history?

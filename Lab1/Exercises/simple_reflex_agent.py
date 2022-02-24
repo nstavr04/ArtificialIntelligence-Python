@@ -29,7 +29,7 @@ def RULE_MATCH(state, rules): # Match rule for a given state
     rule = rules.get(tuple(state)) 
     return rule
 
-def SIMPLE_REFLEX_AGENT (percept): # Determine action
+def SIMPLE_REFLEX_AGENT (percept): # Determine action 
     state = INTERPRET_INPUT(percept) 
     rule = RULE_MATCH(state, rules) 
     action = RULE_ACTION[rule] 
@@ -51,7 +51,7 @@ def Actuators(action): # Modify Environment
 def run(n): # run the agent through n steps 
     print('   Current                       New')
     print('location status action location status') 
-    for i in range(i, n):
+    for i in range(1, n):
         (location, status) = Sensors() # Sense Environment before action 
         print("{:12s}{:8s}".format(location, status), end='') 
         action = SIMPLE_REFLEX_AGENT (Sensors()) 
@@ -59,4 +59,4 @@ def run(n): # run the agent through n steps
         (location, status) = Sensors() # Sense Environment after action 
         print("{:8s}{:12s}{:8s}".format(action, location, status))
 
-
+run(10)
