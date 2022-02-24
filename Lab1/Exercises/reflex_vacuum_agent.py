@@ -8,7 +8,7 @@ Environment = {
 }
 
 # Determine action
-def REFLEX_VACUUM_AGENT (loc_st): 
+def REFLEX_VACUUM_AGENT(loc_st): 
     if loc_st[1] == 'Dirty':
         return 'Suck' 
     if loc_st[0] == A:
