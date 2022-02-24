@@ -39,5 +39,5 @@ run()
 #
 #   4.How many table entries are required for an agent lifetime of T steps?
 #
-#   T table entries
+#   Increases exponentially, 
 
