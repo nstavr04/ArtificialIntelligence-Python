@@ -1,3 +1,3 @@
 # ArtificialIntelligence-Python
 
-# Python code used during the Artificial Intelligence course
+## Python code used during the Artificial Intelligence course
