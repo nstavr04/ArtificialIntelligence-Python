@@ -77,19 +77,20 @@ def REMOVE_FIRST(queue):
 
 '''
 Successor function, mapping the nodes to its successors
-We include the ones that do not violate our problem constraints
+We do not include the ones that violate our problems constraints
 '''
 def successor_fn(state):  # Lookup list of successor states
 
-    if state != (('W','E','E','W') or ('E','W','W','E')
-    or ('W','W','E','E') or ('E','E','W','W')):
-        return STATE_SPACE[state]  # successor_fn( 'C' ) returns ['F', 'G']
+    violation = [('W','E','E','W'), ('E','W','W','E'),('W','W','E','E'),('E','E','W','W')]
+
+    return [i for i in STATE_SPACE[state] if i not in violation]  
 
 # (Farmer, Wolf, Goat, Cabbage)
 # Wolf and Goat cannot be together alone W E E W || E W W E
 # Goat and Cabbage cannot be together alone W W E E || E E W W
 
 ST1 = ('W','W','W','W')
+ST15 = ('E','W','W','W') # Case where farmer just goes alone
 
 ST2 = ('E','E','W','W') # VIOLATION
 ST3 = ('E','W','E','W')
@@ -104,18 +105,20 @@ ST9 = ('E','E','W','E')
 ST10 = ('E','W','E','E')
 
 ST11 = ('W','E','E','W') # VIOLATION
-ST12 = ('W','E','W','E') 
+ST12 = ('W','E','W','E') # SOLUTION PATH
 ST13 = ('W','W','E','E') # VIOLATION
 
 ST14 = ('E','E','E','E')
 
 INITIAL_STATE = ST1
 GOAL_STATE = ST14
-STATE_SPACE = { ST1 : [ST1, ST2, ST3, ST4],
-               ST2: [ST2, ST1, ST5], ST3: [ST1, ST3, ST6], ST4: [ST1, ST4, ST7],
-               ST5: [ST5, ST2, ST8], ST6: [ST6, ST3, ST9], ST7: [ST7, ST4, ST10],
-               ST8: [ST8, ST5, ST11], ST9: [ST9, ST6, ST12], ST10: [ST10, ST7, ST13],
-               ST11: [ST11, ST8, ST14], ST12: [ST12, ST9, ST14], ST13: [ST13, ST10, ST14] }
+STATE_SPACE = { ST1: [ST2, ST3, ST4, ST15],
+                ST15: [ST1],
+               ST2: [ST1, ST5], ST3: [ST1, ST6], ST4: [ST1, ST7],
+               ST5: [ST2, ST8, ST9], ST6: [ST3, ST9, ST10], ST7: [ST4, ST9, ST10],
+               ST8: [ST5, ST6, ST11], ST9: [ST5, ST7, ST12], ST10: [ST6, ST7, ST13],
+               ST11: [ST8, ST14], ST12: [ST9, ST14], ST13: [ST10, ST14],
+               ST14: [] }
 
 
 '''
