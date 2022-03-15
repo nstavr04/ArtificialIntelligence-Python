@@ -31,7 +31,7 @@ def A_STAR():
         if H[node.STATE] == GOAL_H:
             return node.path()
         children = EXPAND(node)
-        fringe = INSERT_NEXT(children, fringe)
+        fringe = INSERT_ALL(children, fringe)
         print("fringe: {}".format(fringe))
 
 
@@ -62,11 +62,9 @@ def INSERT(node, queue):
 '''
 Insert the next node with the best fn
 '''
-def INSERT_NEXT(list, queue):
-    # Ascending order
-    list = sorted(list, key=hn)
-    # Return the child with lowest heuristic
-    return list.pop
+def INSERT_ALL(list, queue):
+    queue.extend(list)
+    return queue
 
 
 '''
