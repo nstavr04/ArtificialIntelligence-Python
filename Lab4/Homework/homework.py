@@ -1,6 +1,6 @@
 import math
 import random
-
+from queens_fitness import *
 
 p_mutation = 0.2
 num_of_generations = 30
@@ -15,11 +15,14 @@ def genetic_algorithm(population, fitness_fn, minimal_fitness):
 
         for i in range(len(population)):
             mother, father = random_selection(population, fitness_fn)
+            print(mother)
+            print(father)
             child = reproduce(mother, father)
 
             if random.uniform(0, 1) < p_mutation:
                 child = mutate(child)
 
+            print(child)
             new_population.add(child)
 
         # Add new population to population, use union to disregard
@@ -64,15 +67,20 @@ def mutate(individual):
     Return the mutated individual
     '''
 
-    change = random.randomint(0,2)
-
+    change = random.randint(0,2)
     # Gets an error otherwise
     list_ind = list(individual)
+    #Here it has issue, printing shows list with 1 tuple in it
+    #print(list_ind)
 
-    if list_ind[change] == 0:
-        list_ind[change] = 1
+    #list_ind[random.randrange(len(list_ind))] ^= 1 
+
+    pick = random.randint(0,2)
+    
+    if list_ind[pick] == 0:
+        list_ind[pick] = 1
     else:
-        list_ind[change] = 0  
+        list_ind = 0
 
     mutation = tuple(list_ind)
 
@@ -117,7 +125,7 @@ def random_selection(population, fitness_fn):
     while(selected_variable[0] == selected_variable[1]):
         selected_variable[1] = random.choices(ordered_population, fitnessListPercentage)
 
-    return selected_variable
+    return selected_variable[0],selected_variable[1]
 
 
 def fitness_function(individual):
@@ -132,6 +140,7 @@ def fitness_function(individual):
 
     enumerate(reversed((1, 1, 0))) -> [(0, 0), (1, 1), (2, 1)]
     '''
+    #print(individual)
 
     fitnessLevel = 4 * individual[0] + 2 * individual[1] + 1 * individual[2]
 
