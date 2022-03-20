@@ -1,3 +1,4 @@
+import math
 import random
 
 
@@ -48,7 +49,13 @@ def reproduce(mother, father):
     Return the child individual
     '''
 
-    #return child
+    crossover = random.randint(0,2)
+
+    # Assuming mother will be until the crossover point and father from the crossover point and on
+    # mother until crossover (not included), father from crossover (included)
+    child = mother[:crossover] + father[crossover:]
+
+    return child
 
 
 def mutate(individual):
@@ -57,7 +64,19 @@ def mutate(individual):
     Return the mutated individual
     '''
 
-    #return mutation
+    change = random.randomint(0,2)
+
+    # Gets an error otherwise
+    list_ind = list(individual)
+
+    if list_ind[change] == 0:
+        list_ind[change] = 1
+    else:
+        list_ind[change] = 0  
+
+    mutation = tuple(list_ind)
+
+    return mutation
 
 
 def random_selection(population, fitness_fn):
@@ -73,9 +92,32 @@ def random_selection(population, fitness_fn):
     # want to do it in the same order. So let's convert it temporarily to a
     # list.
     ordered_population = list(population)
+    pop_len = len(ordered_population)
 
+    totalFitness = 0
+    fitnessList = []
 
-    #return selected
+    for i in range(pop_len):
+        # Find the fitness of each person, add it to the total and to our list
+        fitness = fitness_fn(ordered_population[i])
+        totalFitness += fitness
+        fitnessList.append(fitness)
+
+    fitnessListPercentage = []
+
+    for i in range(pop_len):
+        # For each person find their fitness percentage contribution to total fitness
+        fitnessListPercentage.append(int((fitnessList[i] / totalFitness) * 100))
+
+    selected_variable = []
+
+    selected_variable.append(random.choices(ordered_population, fitnessListPercentage))
+    selected_variable.append(random.choices(ordered_population, fitnessListPercentage))
+
+    while(selected_variable[0] == selected_variable[1]):
+        selected_variable[1] = random.choices(ordered_population, fitnessListPercentage)
+
+    return selected_variable
 
 
 def fitness_function(individual):
@@ -91,7 +133,9 @@ def fitness_function(individual):
     enumerate(reversed((1, 1, 0))) -> [(0, 0), (1, 1), (2, 1)]
     '''
 
-    #return fitness
+    fitnessLevel = 4 * individual[0] + 2 * individual[1] + 1 * individual[2]
+
+    return fitnessLevel
 
 
 def get_fittest_individual(iterable, func):
@@ -119,7 +163,7 @@ def main():
         (0, 1, 0),
         (1, 0, 0)
     }
-    #initial_population = get_initial_population(3, 4)
+    initial_population = get_initial_population(3, 4)
 
     fittest = genetic_algorithm(initial_population, fitness_function, minimal_fitness)
     print('Fittest Individual: ' + str(fittest))
@@ -127,4 +171,4 @@ def main():
 
 if __name__ == '__main__':
     pass
-    #main()
+    main()
