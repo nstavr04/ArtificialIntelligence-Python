@@ -15,14 +15,14 @@ def genetic_algorithm(population, fitness_fn, minimal_fitness):
 
         for i in range(len(population)):
             mother, father = random_selection(population, fitness_fn)
-            print(mother)
-            print(father)
+            #print(mother)
+            #rint(father)
             child = reproduce(mother, father)
 
             if random.uniform(0, 1) < p_mutation:
                 child = mutate(child)
 
-            print(child)
+            #print(child)
             new_population.add(child)
 
         # Add new population to population, use union to disregard
@@ -53,12 +53,12 @@ def reproduce(mother, father):
     '''
 
     crossover = random.randint(0,2)
-
+    
     # Assuming mother will be until the crossover point and father from the crossover point and on
     # mother until crossover (not included), father from crossover (included)
     child = mother[:crossover] + father[crossover:]
 
-    return tuple(child)
+    return child
 
 
 def mutate(individual):
@@ -74,12 +74,14 @@ def mutate(individual):
 
     #list_ind[random.randrange(len(list_ind))] ^= 1 
 
+    #print(list_ind)
+
     pick = random.randint(0,2)
     
     if list_ind[pick] == 0:
         list_ind[pick] = 1
     else:
-        list_ind = 0
+        list_ind[pick] = 0
 
     mutation = tuple(list_ind)
 
@@ -114,17 +116,14 @@ def random_selection(population, fitness_fn):
 
     for i in range(pop_len):
         # For each person find their fitness percentage contribution to total fitness
-        fitnessListPercentage.append(int((fitnessList[i] / totalFitness) * 100))
+        fitnessListPercentage.append(100 * fitnessList[i] // totalFitness)
 
-    selected_variable = []
-
-    selected_variable.append(random.choices(ordered_population, fitnessListPercentage))
-    selected_variable.append(random.choices(ordered_population, fitnessListPercentage))
+    selected_variable = (random.choices(ordered_population, fitnessListPercentage, k=2))
 
     while(selected_variable[0] == selected_variable[1]):
-        selected_variable[1] = random.choices(ordered_population, fitnessListPercentage)
+        selected_variable = random.choices(ordered_population, fitnessListPercentage, k=2)
 
-    return selected_variable
+    return selected_variable[0], selected_variable[1]
 
 
 def fitness_function(individual):
