@@ -28,8 +28,11 @@ def is_terminal(state):
     :param state: State of the checkerboard. Ex: [0; 1; 2; 3; X; 5; 6; 7; 8]
     :return:
     """
-    pass
+    
+    if (utility_of(state) != 0 or (state.count('X') + state.count('O')) == 9):
+        return True
 
+    return False
 
 def utility_of(state):
     """
@@ -37,7 +40,26 @@ def utility_of(state):
     :param state: State of the checkerboard. Ex: [0; 1; 2; 3; X; 5; 6; 7; 8]
     :return:
     """
-    pass
+    if ((state[0] == 'X' and state[1] == 'X' and state[2] == 'X') or 
+        (state[3] == 'X' and state[4] == 'X' and state[5] == 'X') or
+        (state[6] == 'X' and state[7] == 'X' and state[8] == 'X') or
+        (state[0] == 'X' and state[3] == 'X' and state[6] == 'X') or
+        (state[1] == 'X' and state[4] == 'X' and state[7] == 'X') or
+        (state[2] == 'X' and state[5] == 'X' and state[8] == 'X') or
+        (state[0] == 'X' and state[4] == 'X' and state[8] == 'X') or
+        (state[2] == 'X' and state[4] == 'X' and state[6] == 'X')):
+            return 1
+    elif ((state[0] == 'O' and state[1] == 'O' and state[2] == 'O') or
+        (state[3] == 'O' and state[4] == 'O' and state[5] == 'O') or
+        (state[6] == 'O' and state[7] == 'O' and state[8] == 'O') or
+        (state[0] == 'O' and state[3] == 'O' and state[6] == 'O') or
+        (state[1] == 'O' and state[4] == 'O' and state[7] == 'O') or
+        (state[2] == 'O' and state[5] == 'O' and state[8] == 'O') or
+        (state[0] == 'O' and state[4] == 'O' and state[8] == 'O') or
+        (state[2] == 'O' and state[4] == 'O' and state[6] == 'O')):
+            return -1
+    else:
+        return 0
 
 
 def successors_of(state):
@@ -46,7 +68,29 @@ def successors_of(state):
     :param state: State of the checkerboard. Ex: [0; 1; 2; 3; X; 5; 6; 7; 8]
     :return:
     """
-    pass
+
+    numX = state.count('X')
+    numO = state.count('O')
+
+    if numX >= numO:
+        player = 'X'
+    else:
+        player = 'O'
+
+    sucList = []
+    singleList = []
+
+    for i in state:
+        # Every time we copy the state
+        singleList = state.copy()
+
+        if not (i == 'X' or i == 'O'):
+            singleList[i] = player
+            # appending to our results a tuple which containts the integer of the move played and the new state
+            sucList.append((i, singleList))
+
+    return sucList
+     
 
 
 def display(state):
