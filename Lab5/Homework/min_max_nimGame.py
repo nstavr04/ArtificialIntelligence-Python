@@ -27,8 +27,8 @@ def is_terminal(state):
     """
     
     # If any pile has more than 2 coins, game is still on. If not, the game is over
-    for i in range(len(state)):
-        if state[i] > 2:
+    for i in state:
+        if i > 2:
             return False
 
     return True
@@ -64,15 +64,16 @@ def successors_of(state):
     for i in range(len(state)):
         singleList = list.copy(state)
         if singleList[i] > 2:
-            pileNum = i
-            singleList.remove(i)
-        for j in range (1,pileNum+1):
+            pileNum = singleList[i]
+            singleList.remove(pileNum)
+        for j in range (1,pileNum // 2 + 1):
             # If the two new piles are not the same number we add them to our list of tuples
-            if (j != ((pileNum + 1) - j)):
-                singleList.add(j)
-                singleList.add((pileNum + 1) - j)
+            if (j != ((pileNum) - j)):
+                singleList.append(j)
+                singleList.append((pileNum) - j)
                 sucList.append((i, singleList))
                 singleList = list.copy(state)
+                singleList.remove(pileNum)
 
     return sucList
 

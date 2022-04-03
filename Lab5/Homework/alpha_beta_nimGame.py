@@ -32,11 +32,24 @@ def alpha_beta_decision(state):
 
 
 def is_terminal(state):
-    pass
+    
+    # If any pile has more than 2 coins, game is still on. If not, the game is over
+    for i in state:
+        if i > 2:
+            return False
+
+    return True
 
 
 def utility_of(state):
-    pass
+    
+    if is_terminal(state):
+        if len(state) % 2 == 0:
+            return -1
+        else:
+            return 1
+
+    return 0
 
 
 def successors_of(state):
