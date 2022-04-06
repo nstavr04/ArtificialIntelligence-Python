@@ -17,14 +17,11 @@ def genetic_algorithm(population, fitness_fn, minimal_fitness):
 
         for i in range(len(population)):
             mother, father = random_selection(population, fitness_fn)
-            #print(mother)
-            #rint(father)
             child = reproduce(mother, father)
 
             if random.uniform(0, 1) < p_mutation:
                 child = mutate(child)
 
-            #print(child)
             new_population.add(child)
 
         # Add new population to population, use union to disregard
@@ -54,7 +51,7 @@ def reproduce(mother, father):
     Return the child individual
     '''
 
-    crossover = random.randint(0,2)
+    crossover = random.randint(1,8)
     
     # Assuming mother will be until the crossover point and father from the crossover point and on
     # mother until crossover (not included), father from crossover (included)
@@ -148,7 +145,7 @@ def main():
     initial_population = get_initial_population(8, 8)
     print(initial_population)
 
-    fittest = genetic_algorithm(initial_population, fitness_fn_negative , minimal_fitness)
+    fittest = genetic_algorithm(initial_population, fitness_fn_positive , minimal_fitness)
     print('Fittest Individual: ' + str(fittest))
 
 
