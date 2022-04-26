@@ -4,22 +4,22 @@ def minmax_decision(state):
         if is_terminal(state):
             return utility_of(state)
         v = -infinity
-        for (a, s) in successors_of(state):
+        for s in successors_of(state):
             v = max(v, min_value(s))
-        print('V: ' + str(v))
+        # print('V: ' + str(v))
         return v
 
     def min_value(state):
         if is_terminal(state):
             return utility_of(state)
         v = infinity
-        for (a, s) in successors_of(state):
+        for s in successors_of(state):
             v = min(v, max_value(s))
         return v
 
     infinity = float('inf')
-    action, state = argmax(successors_of(state), lambda a: min_value(a[1]))
-    return action
+    state = argmax(successors_of(state), lambda a: min_value(a))
+    return state
 
 def is_terminal(state):
     """
@@ -35,45 +35,37 @@ def is_terminal(state):
 
 def utility_of(state):
     """
-    returns +1 if winner is X (MAX player), -1 if winner is O (MIN player), or 0 otherwise
+    returns 0 if winner is MAX player, 1 if winner is MIN player
     MIN starts the game
     """
-    if is_terminal(state):
-        if len(state) % 2 == 0:
-            return -1
-        else:
-            return 1
+    # We can check that if the length is odd the winnner is 1-MAX otherwise if length is even the winner is O-MIN
+    if len(state) % 2 == 0:
+        return 0
 
-    return 0
+    return 1
 
 def successors_of(state):
     """
     returns a list of tuples (move, state)
     move indicates which pile we split
     """
-
+    
     sucList = []
 
     # Need to take the list and find the next divisions of the piles
 
-    singleList = []
+    # Number of coins on current pile we are on at the time
     pileNum = 0
 
     # For each item of the state we want to split it into two piles and add that new state to our list of tuples
     # We know already that the state is not terminal so we dont need to check it again
-    for i in range(len(state)):
-        singleList = list.copy(state)
-        if singleList[i] > 2:
-            pileNum = singleList[i]
-            singleList.remove(pileNum)
-        for j in range (1,pileNum // 2 + 1):
-            # If the two new piles are not the same number we add them to our list of tuples
-            if (j != ((pileNum) - j)):
-                singleList.append(j)
-                singleList.append((pileNum) - j)
-                sucList.append((i, singleList))
-                singleList = list.copy(state)
-                singleList.remove(pileNum)
+    for i in range(0,len(state)):
+        pileNum = state[i]
+        if state[i] > 2:
+            for j in range (1, pileNum // 2 + 1):
+                # We add the two new piles to our list of tuples               
+                new_state = state[:i] + [j, (pileNum) - j] + state[i + 1:]
+                sucList.append(new_state)
 
     return sucList
 
@@ -127,8 +119,8 @@ def user_select_pile(list_of_piles):
 
 
 def main():
-    state = [7]
-
+    state = [15]
+    
     while not is_terminal(state):
         state = user_select_pile(state)
         if not is_terminal(state):

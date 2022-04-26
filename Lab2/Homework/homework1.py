@@ -90,7 +90,6 @@ def successor_fn(state):  # Lookup list of successor states
 # Goat and Cabbage cannot be together alone W W E E || E E W W
 
 ST1 = ('W','W','W','W')
-ST15 = ('E','W','W','W') # Case where farmer just goes alone
 
 ST2 = ('E','E','W','W') # VIOLATION
 ST3 = ('E','W','E','W')
@@ -112,10 +111,9 @@ ST14 = ('E','E','E','E')
 
 INITIAL_STATE = ST1
 GOAL_STATE = ST14
-STATE_SPACE = { ST1: [ST2, ST3, ST4, ST15],
-                ST15: [ST1],
+STATE_SPACE = { ST1: [ST2, ST3, ST4],
                ST2: [ST1, ST5], ST3: [ST1, ST6], ST4: [ST1, ST7],
-               ST5: [ST2, ST8, ST9], ST6: [ST3, ST9, ST10], ST7: [ST4, ST9, ST10],
+               ST5: [ST2, ST8, ST9], ST6: [ST3, ST8, ST10], ST7: [ST4, ST9, ST10],
                ST8: [ST5, ST6, ST11], ST9: [ST5, ST7, ST12], ST10: [ST6, ST7, ST13],
                ST11: [ST8, ST14], ST12: [ST9, ST14], ST13: [ST10, ST14],
                ST14: [] }

@@ -91,12 +91,13 @@ ST7 = ('A', 'Clean', 'Clean')
 ST8 = ('B', 'Clean', 'Clean')
 
 # Our state space is all the possibilities starting from A , Dirty Dirty
+# We do not put the same states for example from A Dirty Dirty to A Dirty Dirty again
 
 INITIAL_STATE = ST1
 GOAL_STATE = ST7 or ST8
-STATE_SPACE = { ST1 : [ST1, ST2, ST3],
-               ST2: [ST2, ST1, ST6], ST3: [ST3, ST4],
-               ST4: [ST4, ST8, ST3], ST5: [ST5, ST6, ST7], ST6: [ST6, ST5], ST7: [],
+STATE_SPACE = { ST1 : [ST2, ST3],
+               ST2: [ST1, ST6], ST3: [ST4],
+               ST4: [ST8, ST3], ST5: [ST6, ST7], ST6: [ST5], ST7: [],
                ST8: [] }
 
 

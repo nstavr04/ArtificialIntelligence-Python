@@ -4,7 +4,7 @@ C = 'C'
 D = 'D'
 state = {}
 action = None
-model = {A: None, B: None, C: None, D: None} # Initially ignorant
+model = {A: None, B: None, C: None, D: None}
  
 RULE_ACTION = {
     1: 'Suck', 

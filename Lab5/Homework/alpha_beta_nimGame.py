@@ -1,37 +1,36 @@
-def alpha_beta_decision(state):
-    infinity = float('inf')
+def alphabeta_decision(state):
 
     def max_value(state, alpha, beta):
         if is_terminal(state):
-            return utility_of(state)
+            return utility_of_ab(state)
         v = -infinity
-        for successor in successors_of(state):
-            v = max(v, min_value(successor, alpha, beta))
+        for s in successors_of(state):
+            v = max(v, min_value(s, alpha, beta))
             if v >= beta:
                 return v
-            alpha = min(alpha, v)
+            alpha = max(alpha, v)
+        # print('V: ' + str(v))
         return v
 
     def min_value(state, alpha, beta):
         if is_terminal(state):
-            return utility_of(state)
+            return utility_of_ab(state)
         v = infinity
-
-        for successor in successors_of(state):
-            v = min(v, max_value(successor, alpha, beta))
+        for s in successors_of(state):
+            v = min(v, max_value(s, alpha, beta))
             if v <= alpha:
                 return v
             beta = max(beta, v)
         return v
 
-    state = argmax(
-        successors_of(state),
-        lambda a: min_value(a, infinity, -infinity)
-    )
+    infinity = float('inf')
+    state = argmax(successors_of(state), lambda a: min_value(a, infinity, -infinity))
     return state
 
-
 def is_terminal(state):
+    """
+    return True if the game is over (When all of the piles have 2 coins or less)
+    """
     
     # If any pile has more than 2 coins, game is still on. If not, the game is over
     for i in state:
@@ -40,28 +39,48 @@ def is_terminal(state):
 
     return True
 
+def utility_of_ab(state):
+    """
+    returns -1 if winner is MAX player, 1 if winner is MIN player
+    MIN starts the game
+    """
+    # We can check that if the length is odd the winnner is 1-MAX otherwise if length is even the winner is O-MIN
+    if len(state) % 2 == 0:
+        return -1
 
-def utility_of(state):
-    
-    if is_terminal(state):
-        if len(state) % 2 == 0:
-            return -1
-        else:
-            return 1
-
-    return 0
-
+    return 1
 
 def successors_of(state):
-    pass
+    """
+    returns a list of tuples (move, state)
+    move indicates which pile we split
+    """
+    
+    sucList = []
 
+    # Need to take the list and find the next divisions of the piles
+
+    # Number of coins on current pile we are on at the time
+    pileNum = 0
+
+    # For each item of the state we want to split it into two piles and add that new state to our list of tuples
+    # We know already that the state is not terminal so we dont need to check it again
+    for i in range(0,len(state)):
+        pileNum = state[i]
+        if state[i] > 2:
+            for j in range (1, pileNum // 2 + 1):
+                # We add the two new piles to our list of tuples               
+                new_state = state[:i] + [j, (pileNum) - j] + state[i + 1:]
+                sucList.append(new_state)
+
+    return sucList
 
 def argmax(iterable, func):
     return max(iterable, key=func)
 
 
 def computer_select_pile(state):
-    new_state = alpha_beta_decision(state)
+    new_state = alphabeta_decision(state)
     return new_state
 
 
@@ -106,8 +125,8 @@ def user_select_pile(list_of_piles):
 
 
 def main():
-    state = [7]
-
+    state = [15]
+    
     while not is_terminal(state):
         state = user_select_pile(state)
         if not is_terminal(state):

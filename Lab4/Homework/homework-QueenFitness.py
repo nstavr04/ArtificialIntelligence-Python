@@ -1,6 +1,8 @@
 import math
 import random
 
+from queens_fitness import *
+
 
 p_mutation = 0.2
 num_of_generations = 30
@@ -15,14 +17,11 @@ def genetic_algorithm(population, fitness_fn, minimal_fitness):
 
         for i in range(len(population)):
             mother, father = random_selection(population, fitness_fn)
-            #print(mother)
-            #rint(father)
             child = reproduce(mother, father)
 
             if random.uniform(0, 1) < p_mutation:
                 child = mutate(child)
 
-            #print(child)
             new_population.add(child)
 
         # Add new population to population, use union to disregard
@@ -52,7 +51,7 @@ def reproduce(mother, father):
     Return the child individual
     '''
 
-    crossover = random.randint(0,2)
+    crossover = random.randint(1,8)
     
     # Assuming mother will be until the crossover point and father from the crossover point and on
     # mother until crossover (not included), father from crossover (included)
@@ -67,14 +66,7 @@ def mutate(individual):
     Return the mutated individual
     '''
 
-    # Gets an error otherwise
     list_ind = list(individual)
-    #Here it has issue, printing shows list with 1 tuple in it
-    #print(list_ind)
-
-    #list_ind[random.randrange(len(list_ind))] ^= 1 
-
-    #print(list_ind)
 
     pick = random.randint(0,2)
     
@@ -116,7 +108,7 @@ def random_selection(population, fitness_fn):
 
     for i in range(pop_len):
         # For each person find their fitness percentage contribution to total fitness
-        fitnessListPercentage.append(100 * fitnessList[i] // totalFitness)
+        fitnessListPercentage.append(fitnessList[i] / totalFitness)
 
     selected_variable = (random.choices(ordered_population, fitnessListPercentage, k=2))
 
@@ -124,26 +116,6 @@ def random_selection(population, fitness_fn):
         selected_variable = random.choices(ordered_population, fitnessListPercentage, k=2)
 
     return selected_variable[0], selected_variable[1]
-
-
-def fitness_function(individual):
-    '''
-    Computes the decimal value of the individual
-    Return the fitness level of the individual
-
-    Explanation:
-    enumerate(list) returns a list of pairs (position, element):
-
-    enumerate((4, 6, 2, 8)) -> [(0, 4), (1, 6), (2, 2), (3, 8)]
-
-    enumerate(reversed((1, 1, 0))) -> [(0, 0), (1, 1), (2, 1)]
-    '''
-    #print(individual)
-
-    fitnessLevel = 4 * individual[0] + 2 * individual[1] + 1 * individual[2]
-
-    return fitnessLevel
-
 
 def get_fittest_individual(iterable, func):
     return max(iterable, key=func)
@@ -155,24 +127,18 @@ def get_initial_population(n, count):
     Note since its a set it disregards duplicate elements.
     '''
     return set([
-        tuple(random.randint(0, 1) for _ in range(n))
+        tuple(random.randint(1, 8) for _ in range(n))
         for _ in range(count)
     ])
 
 
 def main():
-    minimal_fitness = 7
+    minimal_fitness = 0
 
-    # Curly brackets also creates a set, if there isn't a colon to indicate a dictionary
-    initial_population = {
-        (1, 1, 0),
-        (0, 0, 0),
-        (0, 1, 0),
-        (1, 0, 0)
-    }
-    initial_population = get_initial_population(3, 4)
+    initial_population = get_initial_population(8, 8)
+    print(initial_population)
 
-    fittest = genetic_algorithm(initial_population, fitness_function, minimal_fitness)
+    fittest = genetic_algorithm(initial_population, fitness_fn_positive , minimal_fitness)
     print('Fittest Individual: ' + str(fittest))
 
 

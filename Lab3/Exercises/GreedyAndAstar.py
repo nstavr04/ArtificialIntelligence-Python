@@ -34,6 +34,21 @@ def BEST_FIRST_SEARCH():
         fringe = INSERT_ALL(children, fringe)
         print("fringe: {}".format(fringe))
 
+'''
+Run the A* algorithm
+'''
+def A_STAR():
+    fringe = []
+    initial_node = Node(INITIAL_STATE)
+    fringe = INSERT(initial_node, fringe)
+    while fringe is not None:
+        node = REMOVE_LOWEST_FN(fringe)
+        if H[node.STATE] == GOAL_H:
+            return node.path()
+        children = EXPAND(node)
+        fringe = INSERT_ALL(children, fringe)
+        print("fringe: {}".format(fringe))
+
 
 '''
 Expands node and gets the successors (children) of that node.
@@ -67,9 +82,9 @@ def INSERT_ALL(list, queue):
     return queue
 
 
-'''
-Removes and returns the child with the lowest heuristic from the fringe
-'''
+
+# Removes and returns the child with the lowest heuristic from the fringe
+# Used for greedy
 def REMOVE_LOWEST_HEURISTIC(queue):
     min = queue[0]
     for node in queue:
@@ -79,11 +94,36 @@ def REMOVE_LOWEST_HEURISTIC(queue):
     queue.remove(min)
     return min
 
-'''
-Successor function, mapping the nodes to its successors
-'''
+
+# Removes and returns the child with the lowest fn function value
+# Used for A*
+# Need to calculate path cost
+def REMOVE_LOWEST_FN(queue):
+    min = queue[0]
+    if(min.STATE == 'A'):
+        min_fn = 0
+    else:
+        min_fn = fn(min)
+        for node in queue:
+            if fn(node) < min_fn:
+                min = node
+                min_fn = fn(node)
+    
+    queue.remove(min)
+    return min
+
+#Successor function, mapping the nodes to its successors
 def successor_fn(state):  # Lookup list of successor states
     return STATE_SPACE[state]  # successor_fn( 'C' ) returns ['F', 'G']
+
+def hn(x):
+    return H[x.STATE]
+
+def gn(x):
+    return COST[(x.PARENT_NODE.STATE, x.STATE)]
+
+def fn(x):
+    return hn(x) + gn(x) 
 
 # Our state space
 
@@ -109,6 +149,13 @@ STATE_SPACE = { INITIAL_STATE: [ STB, STC, STD],
                STG: [STK], STH: [STK, STL],
                STK: [], STL: [], STJ: [], }
 
+COST = {
+    ('A','B'): 1, ('A','C'): 2, ('A','D'): 4,
+    ('B','F'): 5, ('B','E'): 4, ('C','E'): 1, ('D','H'): 1, ('D','I'): 4, ('D','J'): 2,
+    ('F','G'): 1, ('E','G'): 2, ('E','H'): 3, ('I','L'): 3,
+    ('G','K'): 6, ('H','K'): 6, ('H','L'): 5
+}
+
 H = {
     'A': 6, 'B': 5, 'C': 5, 'D': 2, 'E': 4, 'F': 5, 'G': 4, 'H': 1, 'I': 2, 'J': 1, 'K': 0, 'L': 0 
 }
@@ -119,7 +166,14 @@ Run tree search and display the nodes in the path to goal node
 '''
 def run():
     path = BEST_FIRST_SEARCH()
-    print('Solution path:')
+    print('-> Greedy Best First Solution path:')
+    for node in path:
+        node.display()
+
+    print()
+
+    path = A_STAR()
+    print('-> A* Solution path:')
     for node in path:
         node.display()
 
